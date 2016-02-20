@@ -159,6 +159,8 @@ public with sharing class HODClientHTTPClient {
     {
         HttpResponse resp = null;
         params.add(new Param(HODClientConstants.API_KEY, apiKey));
+        
+        // Processing POST Request
         if(call == HODClientConstants.POST_REQUEST)
         {
            
@@ -170,11 +172,18 @@ public with sharing class HODClientHTTPClient {
             }
             else
             {
-                path = getPathWithQueryParameters(path , params);
+                path = getPathWithQueryParameters(path, params);
                 resp = HttpClient.postRequest(path,'');
             }
+        } 
+        // Processing GET Request
+        else if(call == HODClientConstants.GET_REQUEST) 
+        {
+        	path = getPathWithQueryParameters(path, params);
+            resp = HttpClient.getRequest(path);
         }
-        String responseBody  = '';
+        
+        String responseBody = '';
         // check for response status
         if(resp.getStatusCode() == HODClientConstants.STATUS_200_OK)
         {

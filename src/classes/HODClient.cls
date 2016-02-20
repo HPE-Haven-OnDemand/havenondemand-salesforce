@@ -81,6 +81,24 @@ public class HODClient {
                                                 this.apiKey,
                                                 params);
     }
+    
+    /**
+     * calls GET Request 
+     *
+     * @param params params to be passed
+     * @param hodApp end point to be called
+     * @param mode sync/async
+     * @return data deserialized response
+     * @throws HODClientException
+     */ 
+    public Map<String,Object> getRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)
+    {
+        String url = HODClient.GetUrlString(hodApp, this.version, mode);
+        return HODClientHTTPClient.invokeHODApi(url, 
+                                                HODClientConstants.GET_REQUEST, 
+                                                this.apiKey,
+                                                params);
+    }
   	
     
     /**

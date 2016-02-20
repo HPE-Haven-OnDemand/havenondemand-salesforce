@@ -6,6 +6,7 @@
  * @author Topcoder
  */
 public  class HttpClient {    
+    
     /**
      * calls POST Request
      *
@@ -36,6 +37,39 @@ public  class HttpClient {
             	req.setHeader('Content-Type', 'application/json');
         	}
         	HttpResponse resp = h.send(req);
+			return resp;
+        }
+        catch(Exception ex)
+        {
+            
+        	Map<String,String> exceptionData = new Map<String,String>();
+            // throw error
+        	throw new HODClientException(ex.getMessage());
+        }
+    }
+    
+    /**
+     * calls GET Request
+     *
+     * @param url Url of the endpoint , it should contain query string
+     * @return HttpResponse response 
+     */  
+    public static HttpResponse getRequest(String url)
+    {
+        try
+        {
+        	Http h = new Http();
+    		HttpRequest req = new HttpRequest();
+    		req.setEndpoint(url);
+        	req.setTimeout(HODClientConstants.TIME_OUT);
+        	req.setMethod(HODClientConstants.GET_REQUEST);
+            
+            //req.setHeader('Accept', 'application/json');
+            //req.setHeader('Content-Type', 'application/json');
+        	
+        	HttpResponse resp = h.send(req);
+        	
+        	system.debug('--- get response '+ resp);
 			return resp;
         }
         catch(Exception ex)
