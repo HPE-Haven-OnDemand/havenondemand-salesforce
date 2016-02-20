@@ -72,6 +72,94 @@ catch (HODClientException ex)
 }
 
 ```
+### Sample get sync call (FIND_SIMILAR)
+
+``` Apex
+try
+{
+      // create client for FIND_SIMILAR
+      HODClient client = new HODClient(apiKey, version);
+      List<Param> params = new List<Param>(); 
+      params.add(new Param('text', 'Sports'));
+      params.add(new Param('highlight', 'sentences'));
+    	   
+      // get response
+      Map<String,Object> response = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+```
+### Sample get sync call (LANGUAGE_IDENTIFICATION)
+
+``` Apex
+try
+{
+      // create client for LANGUAGE_IDENTIFICATION
+      HODClient client = new HODClient(apiKey, version);
+      List<Param> params = new List<Param>();
+      params.add(new Param('text', 'testing'));
+      params.add(new Param('additional_metadata', 'true'));
+             
+      // get response
+      Map<String,Object> response = client.getRequest(params, HODAPP.LANGUAGE_IDENTIFICATION, HODClientConstants.REQ_MODE.SYNC);
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+```
+
+### Sample get async call (OCR_DOCUMENT)
+
+``` Apex
+try
+{
+      // create client OCR_DOCUMENT
+      HODClient client = new HODClient(apiKey, version);
+      List<Param> params = new List<Param>();
+      params.add(new Param('url', 'https://www.havenondemand.com/sample-content/images/bowers.jpg'));
+      params.add(new Param('mode', 'document_photo'));
+      
+      // get response
+      Map<String,Object> response = client.getRequest(params, HODAPP.OCR_DOCUMENT, HODClientConstants.REQ_MODE.ASYNC);
+      String jobId = (String)response.get(HODClientConstants.JOB_ID); 
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+// check job status
+// if it is finished then getJobResult method can be used to get jobResult
+try{
+      Map<String,Object> data = client.getJobStatus(jobID);
+      System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+// get job data
+try{
+      Map<String,Object> data = client.getJobResult(jobID);
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+
+```
 
 ### Sample post async call (list resources)
 
