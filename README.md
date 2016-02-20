@@ -77,7 +77,7 @@ catch (HODClientException ex)
 ``` Apex
 try
 {
-      // create client for FIND_SIMILAR
+      // create client
       HODClient client = new HODClient(apiKey, version);
       List<Param> params = new List<Param>(); 
       params.add(new Param('text', 'Sports'));
@@ -98,7 +98,7 @@ catch (HODClientException ex)
 ``` Apex
 try
 {
-      // create client for LANGUAGE_IDENTIFICATION
+      // create client
       HODClient client = new HODClient(apiKey, version);
       List<Param> params = new List<Param>();
       params.add(new Param('text', 'testing'));
@@ -120,7 +120,7 @@ catch (HODClientException ex)
 ``` Apex
 try
 {
-      // create client OCR_DOCUMENT
+      // create client
       HODClient client = new HODClient(apiKey, version);
       List<Param> params = new List<Param>();
       params.add(new Param('url', 'https://www.havenondemand.com/sample-content/images/bowers.jpg'));
