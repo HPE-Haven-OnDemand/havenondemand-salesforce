@@ -48,7 +48,7 @@ ant deployCode
 // with apikey and version
 HODClient client = new HODClient(apiKey, version);
 
-// with apikey (version will default to v2)
+// with apikey (version will default to v1)
 HODClient client = new HODClient(apiKey);
 
 
@@ -315,7 +315,7 @@ Object value = response.get('key');
      * @return Map<String,Object> response
      * @throws HODClientException 
      */ 
-    public Map<String,Object> postRequest(Map<String,Object> params, String hodApp, HODClientConstants.REQ_Mode mode)
+    public Map<String,Object> postRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)
 
 
 ```
@@ -323,16 +323,16 @@ Object value = response.get('key');
 ``` Apex
 
     /**
-     * calls POST Request with file attachments
+     * calls GET Request 
      *
-     * @param params params to be passed in post body
+     * @param params params to be passed
      * @param hodApp end point to be called
      * @param mode sync/async
-     * @return Map<String,Object> response 
+     * @return Map<String,Object> response
      * @throws HODClientException
      */ 
-    public Map<String,Object> postRequestWithAttachment(List<Multipart> params, String hodApp, HODClientConstants.REQ_Mode mode)
-
+    public Map<String,Object> getRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)
+    
 
 ```
 
