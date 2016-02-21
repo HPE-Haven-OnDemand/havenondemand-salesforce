@@ -70,7 +70,7 @@ public class HODClient {
      * @param params params to be passed
      * @param hodApp end point to be called
      * @param mode sync/async
-     * @return data deserialized response
+     * @return Map<String,Object> response
      * @throws HODClientException
      */ 
     public Map<String,Object> postRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)
@@ -88,7 +88,7 @@ public class HODClient {
      * @param params params to be passed
      * @param hodApp end point to be called
      * @param mode sync/async
-     * @return data deserialized response
+     * @return Map<String,Object> response
      * @throws HODClientException
      */ 
     public Map<String,Object> getRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)

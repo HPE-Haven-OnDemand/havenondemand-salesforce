@@ -156,7 +156,96 @@ public class HODClientTest {
         Test.stopTest();
     }
     
+    /**
+     *  Sync success Language Identification - GET Request
+     */
+    @isTest
+    private static void testLanguageIdentification() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+        // set params
+		List<Param> params = new List<Param>(); 
+        params.add(new Param('text', 'testing'));
+        params.add(new Param('additional_metadata', 'true'));
+        // get response
+        Map<String,Object> data = client.getRequest(params, HODAPP.LANGUAGE_IDENTIFICATION, HODClientConstants.REQ_MODE.SYNC);
+        System.assert(data.containsKey('additional_metadata'));
+        Test.stopTest();
+    }
     
+    /**
+     *  Sync success Find Similar - GET Request
+     */
+    @isTest
+    private static void testFindSimilar() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+        // set params
+		List<Param> params = new List<Param>(); 
+        params.add(new Param('text', 'Sports'));
+        params.add(new Param('highlight', 'sentences'));
+        // get response
+        Map<String,Object> data = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
+        System.assert(data.containsKey('documents'));
+        Test.stopTest();
+    }
+    
+    /**
+     *  Sync success Entity Extraction - GET Request
+     */
+    @isTest
+    private static void testEntityExtraction() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+        // set params
+		List<Param> params = new List<Param>(); 
+        params.add(new Param('url', 'http://www.cnn.com'));
+        params.add(new Param('entity_type', 'places_eng'));
+        // get response
+        Map<String,Object> data = client.getRequest(params, HODAPP.ENTITY_EXTRACTION, HODClientConstants.REQ_MODE.SYNC);
+        System.assert(data.containsKey('entities'));
+        Test.stopTest();
+    }
+    
+    /**
+     *  Sync failuer Find Similar - GET Request
+     */
+    @isTest
+    private static void testFindSimilarFailure() {
+        testSetup(false);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+        // set params
+		List<Param> params = new List<Param>(); 
+        params.add(new Param('text', 'Sports'));
+        params.add(new Param('highlight', 'sentences'));
+        try
+        {
+            // get response
+        	Map<String,Object> data = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
+        }
+        catch(HODClientException ex)
+        {
+             String response = ex.getMessage();
+             System.assert(response.contains('4004'));
+        }
+        Test.stopTest();
+    }
     
     
     /**
@@ -272,6 +361,21 @@ public class HODClientTest {
         Map<String,Object> data= client.getJobResult('5');
         System.assert(data.get('service') == 'my-service');
         System.assert(data.get('status') == 'Ready');
+        Test.stopTest();
+    }
+    
+    /**
+     *  Get job result OCRDocument -- GET Request
+     */
+    @isTest
+    private static void testGetJobResultOCRDocument() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        HODClient client = new HODClient(apiKey, version);
+        Map<String,Object> data = client.getJobResult('6');
+        System.assert(data.containsKey('text_block'));
         Test.stopTest();
     }
     

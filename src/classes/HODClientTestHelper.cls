@@ -38,6 +38,10 @@ public class HODClientTestHelper {
                 // train prediction async
                 res.setBody('{"jobID":"5"}');
             }
+            else if (req.getEndpoint().contains(HODApp.OCR_DOCUMENT)) { // GET Request
+                // OCR_DOCUMENT async get Request
+                res.setBody('{"jobID":"6"}');
+            }
             else if (req.getEndpoint().contains(HODApp.INDEX_STATUS)) {
                 // index status sync
                 res.setBody(responseIndexStatus);
@@ -45,6 +49,18 @@ public class HODClientTestHelper {
             else if (req.getEndpoint().contains(HODApp.LIST_RESOURCES)) {
                 // list resources
                 res.setBody(responseListResources);
+            }
+            else if (req.getEndpoint().contains(HODApp.LANGUAGE_IDENTIFICATION)) { // GET Request
+                // Language Identification 
+                res.setBody(responseLanguageIdentification);
+            }
+            else if (req.getEndpoint().contains(HODApp.ENTITY_EXTRACTION)) { // GET Request
+                // Entity Extraction 
+                res.setBody(responseEntityExtraction);
+            }
+            else if (req.getEndpoint().contains(HODApp.FIND_SIMILAR)) { // GET Request 
+                // FindSimilar
+                res.setBody(responseFindSimilar);
             }
             else if (req.getEndpoint().contains(HODClientConstants.JOB_STATUS)) {
                 // call job status
@@ -89,6 +105,12 @@ public class HODClientTestHelper {
     public static final String responseIndexStatus = '{"total_documents": 3,"total_index_size": 1335,"24hr_index_updates": 0,"component_count": 1}';
     public static final String responseListResources = '{"public_resources":[],"private_resources":[{"resource":"test","type":"content","flavor":"standard","description":null,"date_created":"Fri Jan 08 2016 10:32:46 GMT+0000 (UTC)","display_name":null,"resourceUUID":"7b40cca0-bca7-4976-ad5c-1c4ab5313adb"}]}';
     
+    // mock response for get request
+    public static final String responseOCRDocument = '{"text_block": [{ "text": "The Life and Work of Fredson Bowers. THOMAS TANSELLE Fnau Mus A Faw nGtnuss wnosza accoplishment and influence cause themcalculated to","left": 0,"top": 0,"width": 688,"height": 1096}]}';
+    public static final String responseLanguageIdentification = '{"additional_metadata": {},"language": "unknown","language_iso639_2b": "UND","encoding": "UTF8","unicode_scripts": ["Basic Latin"]}';
+ 	public static final String responseFindSimilar = '{"documents": [{"index": "wiki_eng", "links": "(SPOR)", "reference":"List of sports attendance figures", "title": "List of sports attendance figures"}, {"index": "wiki_eng", "links": "(SPOR)","title": "Rowing (sport)", "weight": "89.15"}]}';
+    public static final String responseEntityExtraction = '{"entities": [{ "normalized_text": "Syria","type": "places_eng","score": 0.8119,"additional_information": {"lon": 38,"lat": 35},"components": []},{"normalized_text": "Texas","type": "places_eng","score": 0.8022,"additional_information": {"wikidata_id": 1439,"place_country_code": "US"},"components": [],"normalized_length": 5}]}';
+    
     // error response
     public static final String responseFailure = '{"error": 4004,"reason": "Invalid job action","detail": { "message": "API not found"}}';
     
@@ -100,7 +122,8 @@ public class HODClientTestHelper {
         '2'=>responseTextExtraction,
         '3'=>responsePredict,
         '4'=>responseRecomendation,
-        '5'=>responseTrainPrediction
+        '5'=>responseTrainPrediction,
+        '6'=>responseOCRDocument
      };
   	
          

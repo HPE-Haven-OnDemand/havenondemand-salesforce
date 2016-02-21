@@ -64,12 +64,7 @@ public  class HttpClient {
         	req.setTimeout(HODClientConstants.TIME_OUT);
         	req.setMethod(HODClientConstants.GET_REQUEST);
             
-            //req.setHeader('Accept', 'application/json');
-            //req.setHeader('Content-Type', 'application/json');
-        	
         	HttpResponse resp = h.send(req);
-        	
-        	system.debug('--- get response '+ resp);
 			return resp;
         }
         catch(Exception ex)
