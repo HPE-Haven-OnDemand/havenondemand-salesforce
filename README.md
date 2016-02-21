@@ -72,7 +72,7 @@ catch (HODClientException ex)
 }
 
 ```
-### Sample get sync call (FIND_SIMILAR)
+### Sample get sync call (Find Similar)
 
 ``` Apex
 try
@@ -93,7 +93,7 @@ catch (HODClientException ex)
 }
 
 ```
-### Sample get sync call (LANGUAGE_IDENTIFICATION)
+### Sample get sync call (Language Identification)
 
 ``` Apex
 try
@@ -114,8 +114,30 @@ catch (HODClientException ex)
 }
 
 ```
+### Sample get sync call (Entity Extraction)
 
-### Sample get async call (OCR_DOCUMENT)
+``` Apex
+try
+{
+      // create client
+      HODClient client = new HODClient(apiKey, version);
+      List<Param> params = new List<Param>(); 
+      params.add(new Param('url', 'http://www.cnn.com'));
+      params.add(new Param('entity_type', 'places_eng'));
+             
+      // get response
+      Map<String,Object> response = client.getRequest(params, HODAPP.ENTITY_EXTRACTION, HODClientConstants.REQ_MODE.SYNC);
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+		
+
+```
+
+### Sample get async call (OCR Document)
 
 ``` Apex
 try
