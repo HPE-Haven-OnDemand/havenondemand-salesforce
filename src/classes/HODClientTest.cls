@@ -157,6 +157,25 @@ public class HODClientTest {
     }
     
     /**
+     *  ASync success test get OCR Document api
+     */
+    @isTest
+    private static void testOCRDocument() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        HODClient client = new HODClient(apiKey, version);
+        List<Param> params = new List<Param>();  
+        params.add(new Param('url', 'https://www.havenondemand.com/sample-content/images/bowers.jpg'));
+        params.add(new Param('mode', 'document_photo'));
+            
+        Map<String,Object> data = client.getRequest(params, HODAPP.OCR_DOCUMENT, HODClientConstants.REQ_MODE.ASYNC);
+        System.assert(data.get(HODClientConstants.JOB_ID) == '6');
+        Test.stopTest();
+    }
+    
+    /**
      *  Sync success Language Identification - GET Request
      */
     @isTest
@@ -174,6 +193,7 @@ public class HODClientTest {
         // get response
         Map<String,Object> data = client.getRequest(params, HODAPP.LANGUAGE_IDENTIFICATION, HODClientConstants.REQ_MODE.SYNC);
         System.assert(data.containsKey('additional_metadata'));
+        System.assertEquals('unknown', data.get('language'));
         Test.stopTest();
     }
     
@@ -195,6 +215,10 @@ public class HODClientTest {
         // get response
         Map<String,Object> data = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
         System.assert(data.containsKey('documents'));
+        
+        // Checking the response value
+        Map<String,Object> objValueMap = (Map<String,Object>)((List<Object>)data.get('documents'))[0];
+        System.assertEquals('wiki_eng', objValueMap.get('index'));
         Test.stopTest();
     }
     
@@ -220,7 +244,7 @@ public class HODClientTest {
     }
     
     /**
-     *  Sync failuer Find Similar - GET Request
+     *  Sync failure Find Similar - GET Request
      */
     @isTest
     private static void testFindSimilarFailure() {
@@ -233,11 +257,10 @@ public class HODClientTest {
         // set params
 		List<Param> params = new List<Param>(); 
         params.add(new Param('text', 'Sports'));
-        params.add(new Param('highlight', 'sentences'));
         try
         {
             // get response
-        	Map<String,Object> data = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
+        	Map<String,Object> data = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.ASYNC);
         }
         catch(HODClientException ex)
         {

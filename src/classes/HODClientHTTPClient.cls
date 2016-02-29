@@ -158,7 +158,7 @@ public with sharing class HODClientHTTPClient {
     public static Map<String,Object> invokeHODApi(String path, String call, String apiKey, List<Param> params)
     {
         HttpResponse resp = null;
-        params.add(new Param(HODClientConstants.API_KEY, apiKey));
+        params.add(new Param(HODClientConstants.API_KEY,apiKey));
         
         // Processing POST Request
         if(call == HODClientConstants.POST_REQUEST)
@@ -172,14 +172,14 @@ public with sharing class HODClientHTTPClient {
             }
             else
             {
-                path = getPathWithQueryParameters(path, params);
+                path = getPathWithQueryParameters(path,params);
                 resp = HttpClient.postRequest(path,'');
             }
         } 
         // Processing GET Request
         else if(call == HODClientConstants.GET_REQUEST) 
         {
-        	path = getPathWithQueryParameters(path, params);
+        	path = getPathWithQueryParameters(path,params);
             resp = HttpClient.getRequest(path);
         }
         
@@ -197,9 +197,6 @@ public with sharing class HODClientHTTPClient {
             //throw error
             throw new HODClientException(message);
         }
-        
-        
         return (Map<String,Object>)JSON.deserializeUntyped(responseBody);
-        
     }
 }
