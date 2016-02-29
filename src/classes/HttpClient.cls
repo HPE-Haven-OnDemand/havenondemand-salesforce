@@ -13,11 +13,12 @@ public  class HttpClient {
      * @param url Url of the endpoint , it should contain query string
      * @param payLoad pay load to be transferred in body
      * @return HttpResponse response 
+     * @throws HODClientException 
      */  
     public static HttpResponse postRequest(String url, String payLoad)
     {	
     	// calling method with request type as POST
-		return invokeHttpRequest(url, HODClientConstants.POST_REQUEST, payLoad);
+    	return invokeHttpRequest(url, HODClientConstants.POST_REQUEST, payLoad);
     }
     
     /**
@@ -25,6 +26,7 @@ public  class HttpClient {
      *
      * @param url Url of the endpoint , it should contain query string
      * @return HttpResponse response 
+     * @throws HODClientException 
      */  
     public static HttpResponse getRequest(String url)
     {	
@@ -46,8 +48,8 @@ public  class HttpClient {
     	try
         {
         	Http h = new Http();
-    		HttpRequest req = new HttpRequest();
-    		req.setEndpoint(url);
+        	HttpRequest req = new HttpRequest();
+        	req.setEndpoint(url);
         	req.setTimeout(HODClientConstants.TIME_OUT);
         	req.setMethod(requestType);
             
@@ -55,7 +57,7 @@ public  class HttpClient {
             if(requestType == HODClientConstants.POST_REQUEST)
             {
             	// check for payload
-	        	if(payLoad.length() != 0)
+            	if(payLoad.length() != 0)
 	        	{
 	                // set headers if body is passed
 	            	req.setHeader('Content-Type','multipart/form-data; boundary='+HODClientConstants.BOUNDARY_MULTIPART);
@@ -68,12 +70,12 @@ public  class HttpClient {
 	            	req.setHeader('Content-Type', 'application/json');
 	        	}
             }
-        	return h.send(req);
+            return h.send(req);
         }
         catch(Exception ex)
         {
             // Wrapping up the error message and throwing the HODClientException
-        	throw new HODClientException(ex.getMessage());
+            throw new HODClientException(ex.getMessage());
         }
     }
    
