@@ -158,11 +158,14 @@ catch (HODClientException ex)
      System.debug(message);
 }
 
-// check job status
-// if it is finished then getJobResult method can be used to get jobResult
+// check job status using the getJobStatus method call
+
+// If job status is finished then getJobStatus method itself will return job data as part of response
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
+      // Getting job data from the reponse returned for finished job.
+      Object objectData = data.get('text_block');
 }
 catch (HODClientException ex)
 {
@@ -170,7 +173,24 @@ catch (HODClientException ex)
      System.debug(message);
 }
 
-// get job data
+// If job is not yet finished i.e either “queued”, “in progress” or “failed” status.
+// get job data using the getJobResult method, which waits until the job has finished and then returns the result
+try{
+      Map<String,Object> data = client.getJobStatus(jobID);
+      System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED);
+      
+      if(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED) {
+      	 data = client.getJobResult(jobID);
+      }
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+// Or one can call getJobResult method directly to get the job data without checking the job status
+// getJobResult method which waits until the job has finished and then returns the result
 try{
       Map<String,Object> data = client.getJobResult(jobID);
 }
@@ -202,11 +222,14 @@ catch (HODClientException ex)
      System.debug(message);
 }
 
-// check job status
-// if it is finished then getJobResult method can be used to get jobResult
+// check job status using the getJobStatus method call
+
+// If job status is finished then getJobStatus method itself will return job data as part of response
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
+      // Getting job data from the reponse returned for finished job.
+      Object objectData = data.get('text_block');
 }
 catch (HODClientException ex)
 {
@@ -214,7 +237,24 @@ catch (HODClientException ex)
      System.debug(message);
 }
 
-// get job data
+// If job is not yet finished i.e either “queued”, “in progress” or “failed” status.
+// get job data using the getJobResult method, which waits until the job has finished and then returns the result
+try{
+      Map<String,Object> data = client.getJobStatus(jobID);
+      System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED);
+      
+      if(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED) {
+      	 data = client.getJobResult(jobID);
+      }
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+
+// Or one can call getJobResult method directly to get the job data without checking the job status
+// getJobResult method which waits until the job has finished and then returns the result
 try{
       Map<String,Object> data = client.getJobResult(jobID);
 }
@@ -223,7 +263,6 @@ catch (HODClientException ex)
      String message = ex.getMessage();
      System.debug(message);
 }
-
 
 ```
 
