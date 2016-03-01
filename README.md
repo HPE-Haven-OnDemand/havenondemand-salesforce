@@ -236,7 +236,6 @@ try{
       List<Param> params = new List<Param>(); 
       params.add(new Param('test.csv',Blob.valueOf(csvString),'application/CSV'));
       params.add(new Param('service_name','test'));
-      params.add(new Param('required_label','test'));
       // call API
       Map<String,Object> data = client.postRequest(params, HODAPP.PREDICT, HODClientConstants.REQ_MODE.ASYNC);
       String jobId = data.get(HODClientConstants.JOB_ID);
@@ -278,13 +277,15 @@ catch (HODClientException ex)
 - All the calls throw HODClientException  if there is an error
 ``` Apex
 HODClient client = new HODClient(apiKey, version);
-List<Multipart> params = new List<Multipart>(); 
-params.add(new Multipart('test.pdf',Blob.toPdf('sample value'),'application/pdf'));
-params.add(new Multipart('service_name','test'));
+// list of Param has to be passed for request with file attachment
+List<Param> params = new List<Param>();
+params.add(new Param('test.csv',Blob.valueOf(csvString),'application/CSV'));
+params.add(new Param('service_name','test'));
+      
 try
 {
-      String response= client.postRequestWithAttachment(params, HODAPP.PREDICT, HODClientConstants.REQ_MODE.ASYNC);
-        
+     // call API
+     Map<String,Object> data = client.postRequest(params, HODAPP.PREDICT, HODClientConstants.REQ_MODE.ASYNC);
 }
 catch (HODClientException ex)
 {
