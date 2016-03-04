@@ -134,6 +134,27 @@ public class HODClientTest {
         Test.stopTest();
     }
     
+    /**
+     *  Sync success index status - POST Request with HODResponseParser
+     */
+    @isTest
+    private static void testIndexStatusWithParser() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+		List<Param> params = new List<Param>(); 
+		// add parameters to be passed
+        params.add(new Param('index','test'));
+        // get response, it is json response
+        Map<String,Object> data = client.postRequest(params, HODAPP.INDEX_STATUS, HODClientConstants.REQ_MODE.SYNC);
+        // Parsing HOD Response
+        IndexStatusResponse resObj = (IndexStatusResponse)HODResponseParser.parseCustomResponse(data, IndexStatusResponse.class);
+        System.assertEquals(3, resObj.total_documents);
+        Test.stopTest();
+    }
     
     /**
      *  Sync success list resouces
@@ -189,11 +210,31 @@ public class HODClientTest {
         // set params
 		List<Param> params = new List<Param>(); 
         params.add(new Param('text', 'testing'));
-        params.add(new Param('additional_metadata', 'true'));
         // get response
         Map<String,Object> data = client.getRequest(params, HODAPP.LANGUAGE_IDENTIFICATION, HODClientConstants.REQ_MODE.SYNC);
-        System.assert(data.containsKey('additional_metadata'));
         System.assertEquals('unknown', data.get('language'));
+        Test.stopTest();
+    }
+    
+    /**
+     *  Sync success Language Identification - GET Request with HODResponseParser
+     */
+    @isTest
+    private static void testLanguageIdentificationWithParser() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+        // set params
+		List<Param> params = new List<Param>(); 
+        params.add(new Param('text', 'testing'));
+        // get response
+        Map<String,Object> data = client.getRequest(params, HODAPP.LANGUAGE_IDENTIFICATION, HODClientConstants.REQ_MODE.SYNC);
+        // Parsing HOD Response
+        LanguageIdentificationResponse resObj = (LanguageIdentificationResponse)HODResponseParser.parseCustomResponse(data, LanguageIdentificationResponse.class);
+        System.assertEquals('unknown', resObj.language);
         Test.stopTest();
     }
     
@@ -219,6 +260,31 @@ public class HODClientTest {
         // Checking the response value
         Map<String,Object> objValueMap = (Map<String,Object>)((List<Object>)data.get('documents'))[0];
         System.assertEquals('wiki_eng', objValueMap.get('index'));
+        Test.stopTest();
+    }
+    
+    /**
+     *  Sync success Find Similar - GET Request with HODResponseParser
+     */
+    @isTest
+    private static void testFindSimilarWithParser() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        // create client
+        HODClient client = new HODClient(apiKey, version);
+        // set params
+		List<Param> params = new List<Param>(); 
+        params.add(new Param('text', 'Sports'));
+        params.add(new Param('highlight', 'sentences'));
+        // get response
+        Map<String,Object> data = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
+        // Parsing HOD Response
+        FindSimilarResponse resObj = (FindSimilarResponse)HODResponseParser.parseCustomResponse(data, FindSimilarResponse.class);
+        system.assert(resObj.documents != null);
+        FindSimilarResponse.DocumentObj documentObj = resObj.documents.get(0);
+        System.assertEquals('wiki_eng', documentObj.index);
         Test.stopTest();
     }
     
@@ -382,13 +448,16 @@ public class HODClientTest {
         Test.startTest();
         HODClient client = new HODClient(apiKey);
         Map<String,Object> data= client.getJobResult('5');
-        System.assert(data.get('service') == 'my-service');
-        System.assert(data.get('status') == 'Ready');
+        system.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
+         // Parsing HOD Response of async if Job Status is Finished
+        TrainPredictionResponse resObj = (TrainPredictionResponse)HODResponseParser.parseCustomResponse(data, TrainPredictionResponse.class);
+        System.assert(resObj.service == 'my-service');
+        System.assert(resObj.message == 'Ready');
         Test.stopTest();
     }
     
     /**
-     *  Get job result OCRDocument -- GET Request
+     *  Get job result OCRDocument -- GET Request with HODResponseParser
      */
     @isTest
     private static void testGetJobResultOCRDocument() {
@@ -398,7 +467,34 @@ public class HODClientTest {
         Test.startTest();
         HODClient client = new HODClient(apiKey, version);
         Map<String,Object> data = client.getJobResult('6');
-        System.assert(data.containsKey('text_block'));
+        system.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
+         // Parsing HOD Response of async if Job Status is Finished
+        OCRDocumentResponse resObj = (OCRDocumentResponse)HODResponseParser.parseCustomResponse(data, OCRDocumentResponse.class);
+        OCRDocumentResponse.TextBlock textBox = resObj.text_block.get(0);
+        System.assertEquals(688, textBox.width);
+        System.assertEquals(1096, textBox.height);
+        Test.stopTest();
+    }
+    
+    /**
+     *  Get job result OCRDocument -- GET Request with HODResponseParser Failed status
+     */
+    @isTest
+    private static void testGetJobResultOCRDocumentFailed() {
+        testSetup(true);
+        String apiKey = getAPIKeyForTest();
+        String version = getAPIVersion();
+        Test.startTest();
+        HODClient client = new HODClient(apiKey, version);
+        try {
+        	Map<String,Object> data = client.getJobResult('7');
+        	system.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FAILED);
+        	OCRDocumentResponse resObj = (OCRDocumentResponse)HODResponseParser.parseCustomResponse(data, OCRDocumentResponse.class);
+        	system.assert(false, 'Expecting exception');
+        } catch(HODClientException e) {
+        	system.assert(e.getMessage().contains('Invalid job action parameters'));
+        	system.assert(true, 'Expecting exception');
+        }
         Test.stopTest();
     }
     

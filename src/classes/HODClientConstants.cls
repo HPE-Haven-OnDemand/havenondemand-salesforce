@@ -65,4 +65,9 @@ global class HODClientConstants {
     public static String JOB_ID = 'jobID'; 
     public static String JOB_RESPONSE_FINISHED = 'finished';
     public static String JOB_RESPONSE_STATUS = 'status';
+    public static String JOB_RESPONSE_FAILED = 'failed';
+    public static String JOB_RESPONSE_QUEUED = 'queued';
+    public static String JOB_RESPONSE_IN_PROCESS = 'in progress';
+    
+    public static String EMPTY_RESPONSE = 'Empty response';
 }
