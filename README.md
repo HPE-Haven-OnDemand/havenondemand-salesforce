@@ -164,8 +164,9 @@ catch (HODClientException ex)
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
-      // Getting job data from the reponse returned for finished job.
-      Object objectData = data.get('text_block');
+      
+      // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
+      OCRDocumentResponse resObj = (OCRDocumentResponse)HODResponseParser.parseCustomResponse(data, OCRDocumentResponse.class);
 }
 catch (HODClientException ex)
 {
@@ -181,6 +182,8 @@ try{
       
       if(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED) {
       	 data = client.getJobResult(jobID);
+      	 // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
+      	 OCRDocumentResponse resObj = (OCRDocumentResponse)HODResponseParser.parseCustomResponse(data, OCRDocumentResponse.class);
       }
 }
 catch (HODClientException ex)
@@ -193,6 +196,8 @@ catch (HODClientException ex)
 // getJobResult method which waits until the job has finished and then returns the result
 try{
       Map<String,Object> data = client.getJobResult(jobID);
+      // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
+      OCRDocumentResponse resObj = (OCRDocumentResponse)HODResponseParser.parseCustomResponse(data, OCRDocumentResponse.class);
 }
 catch (HODClientException ex)
 {
@@ -228,8 +233,8 @@ catch (HODClientException ex)
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
-      // Getting job data from the reponse returned for finished job.
-      Object objectData = data.get('text_block');
+      // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
+      ListResourcesResponse resObj = (ListResourcesResponse)HODResponseParser.parseCustomResponse(data, ListResourcesResponse.class);
 }
 catch (HODClientException ex)
 {
@@ -245,6 +250,8 @@ try{
       
       if(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED) {
       	 data = client.getJobResult(jobID);
+      	 // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
+      	 ListResourcesResponse resObj = (ListResourcesResponse)HODResponseParser.parseCustomResponse(data, ListResourcesResponse.class);
       }
 }
 catch (HODClientException ex)
@@ -257,6 +264,8 @@ catch (HODClientException ex)
 // getJobResult method which waits until the job has finished and then returns the result
 try{
       Map<String,Object> data = client.getJobResult(jobID);
+      // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
+      ListResourcesResponse resObj = (ListResourcesResponse)HODResponseParser.parseCustomResponse(data, ListResourcesResponse.class);
 }
 catch (HODClientException ex)
 {
@@ -333,14 +342,6 @@ catch (HODClientException ex)
 }
 
 ```
-### Parsing Response
-
-- Method returns Map<String,Object>
-``` Apex
-// value can be type cast to appropriate class or data structure
-Object value = response.get('key');
-
-```
 
 ### HODClient Instance Methods
 
@@ -393,4 +394,229 @@ Object value = response.get('key');
      * @throws HODClientException
      */
     public Map<String,Object> getJobResult(String jobId)
+```
+
+### Parsing Response
+
+- Method returns Map<String,Object>
+
+### HODResponseParser API References
+HODResponseParser class is used to parse the response date ruturned as Map<String,Object>. All method return Map<String,Object> which can be passed as argument to HODResponseParser method. HODResponseParser static methods.
+
+``` Apex
+   /**
+    * Method for parsing the HOD API response to specific supported object type. The method will be 
+    * called after successfull calling of the HOD API and returned response will be passed here for parsing
+    * with the target response class type (based on the called HOD API) as argument. 
+    * @param response  String Successful response received on HOD API call
+    * @param classType Target class type to whom HOD API response result to be parsed
+    * @throws HODClientException
+    */
+    public static Object parseCustomResponse(String response, type classType)
+```
+
+``` Apex
+   /**
+    * Method for parsing the HOD API response to specific supported object type. The method will be
+    * called after successfull calling of the HOD API and returned response will be passed here for parsing
+    * with the target response class type (based on the called HOD API) as argument.
+    * @param responseMap  Map<String,Object> Successful response received on HOD API call
+    * @param classType Target class type to whom HOD API response result to be parsed
+    * @throws HODClientException
+    */
+    public static Object parseCustomResponse(Map<String,Object> responseMap, type classType)
+```
+*Example code:*
+
+```
+   /**
+    * HOD Find Similar API response parser
+    * https://dev.havenondemand.com/apis/findsimilar#response
+    */
+    public with sharing class FindSimilarResponse {
+    	public List<DocumentObj> documents;
+	
+	public class DocumentObj {
+		public string index;	// ( string , optional)	The database that the result returned from.
+		public List<string> links; // ( array[string] , optional)	The terms from the query that match in the results document.
+		public string reference; // ( string , optional)	The reference string that identifies the result document.
+		public string summary; 	// ( string , optional)	The summary of the results document.
+		public string title; 	// ( string , optional)	The title of the result document.
+		public Double weight; 	// ( number , optional)	The percentage relevance that the result document has to the original query.
+	}
+    }
+
+// Using the FindSimilarResponse class to parse the Find Similar HOD API Response using the HODResponseParser     
+try
+{
+      // create client
+      HODClient client = new HODClient(apiKey, version);
+      List<Param> params = new List<Param>(); 
+      params.add(new Param('text', 'Sports'));
+      params.add(new Param('highlight', 'sentences'));
+    	   
+      // get response
+      Map<String,Object> response = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
+      FindSimilarResponse resObj = (FindSimilarResponse)HODResponseParser.parseCustomResponse(response, FindSimilarResponse.class);
+}
+catch (HODClientException ex)
+{
+     String message = ex.getMessage();
+     System.debug(message);
+}
+```
+
+----
+
+## Demo code 1: 
+
+**Call the Entity Extraction API to extract people and places from cnn.com website with a synchronous GET request**
+
+```
+public class EntityExtractionExample {
+	static String apiKey = 'your-apiKey';
+	
+	public static void getEntityExtraction() 
+	{
+	        try
+		{
+	            // create client
+	            HODClient client = new HODClient(apiKey);
+	            List<Param> params = new List<Param>(); 
+	            params.add(new Param('url', 'http://www.cnn.com'));
+	            params.add(new Param('entity_type', 'places_eng'));
+		    	   
+	            // get response
+	            Map<String,Object> response = client.getRequest(params, HODAPP.ENTITY_EXTRACTION, HODClientConstants.REQ_MODE.SYNC);
+	            EntityExtractionResponse resObj = (EntityExtractionResponse)HODResponseParser.parseCustomResponse(response, EntityExtractionResponse.class);
+	            
+	            if (resObj != null) {
+	            	String values = '';
+		            for (EntityExtractionResponse.Entity ent : resObj.entities) {
+		                values += ent.type + '\n';
+		                values += ent.normalized_text + '\n';
+		                if (ent.type.equals('places_eng')) { 
+		                    values += ent.additional_information.place_country_code + '\n';
+		                    values += ent.additional_information.place_elevation + '\n';
+		                    values += ent.additional_information.place_population + '\n';
+		                } else if (ent.type.equals('people_eng')) {
+		                    values += ent.additional_information.person_date_of_birth +'\n';
+		                    values += ent.additional_information.person_profession + '\n';
+		                    values += ent.additional_information.wikipedia_eng + '\n';
+		                }
+		            }
+	            }
+		}
+		catch (HODClientException ex)
+		{
+		     String message = ex.getMessage();
+		     System.debug('----- Error message '+ message);
+		}
+	}
+}
+
+/**
+ * HOD Entity Extraction API response parser
+ * https://dev.havenondemand.com/apis/extractentities#response
+ */
+public class EntityExtractionResponse {
+	public List<Entity> entities;	// The details of extracted items.
+	
+	public class Match
+	{
+	    public integer offset;
+	    public String original_text;
+	    public integer original_length;
+	}
+	
+	public class AdditionalInformation
+	{
+	    public List<String> person_profession;
+	    public String person_date_of_birth;
+	    public integer wikidata_id;
+	    public String wikipedia_eng;
+	    public String image;
+	    public String person_date_of_death;
+	    public Long place_population;
+	    public String place_country_code;
+	    public Double place_elevation; 
+	    public string place_continent;
+	    public string place_type;
+	    public string place_region1;
+	    public string place_region2;
+	    public double place_timezone;
+	    public Double lon;
+	    public Double lat;   
+	}
+	
+	public class Entity
+	{
+	    public String normalized_text;
+	    public String type;
+	    public List<Match> matches;
+	    public double score;
+	    public AdditionalInformation additional_information;
+	    public List<Object> components;
+	    public integer normalized_length;
+	    public integer offset;
+	    public integer original_length;
+	    public String original_text;
+	    
+	}
+}
+```
+
+----
+## Supported standard response classes
+```
+AddToTextIndexResponse.cls
+AutoCompleteResponse.cls
+BarcodeRecognitionResponse.cls
+CancelConnectorResponse.cls
+ConceptExtractionResponse.cls
+ConnectorHistoryResponse.cls
+ConnectorStatusResponse.cls
+CreateConnectorResponse.cls
+CreateQueryProfileResponse.cls
+CreateTextIndexResponse.cls
+DeleteConnectorResponse.cls
+DeleteFromTextIndexResponse.cls
+DeleteQueryProfileResponse.cls
+DeleteTextIndexResponse.cls
+EntityExtractionResponse.cls
+ExpandContainerResponse.cls
+ExpandTermsResponse.cls
+FaceDetectionResponse.cls
+FindRelatedConceptsResponse.cls
+FindSimilarResponse.cls
+GetCommonNeighborsResponse.cls
+GetNeighborsResponse.cls
+GetNodesResponse.cls
+GetShortestPathResponse.cls
+GetSubgraphResponse.cls
+HighlightTextResponse.cls
+ImageRecognitionResponse.cls
+IndexStatusResponse.cls
+LanguageIdentificationResponse.cls
+ListResourcesResponse.cls
+OCRDocumentResponse.cls
+PredictResponse.cls
+RecommendResponse.cls
+RestoreTextIndexResponse.cls
+RetrieveConfigurationResponse.cls
+RetrieveQueryProfileResponse.cls
+SentimentAnalysisResponse.cls
+SpeechRecognitionResponse.cls
+StartConnectorResponse.cls
+StopConnectorResponse.cls
+StoreObjectResponse.cls
+SuggestLinksResponse.cls
+SummarizeGraphResponse.cls
+TextExtractionResponse.cls
+TextTokenizationResponse.cls
+TrainPredictionResponse.cls
+UpdateClassificationResponse.cls
+UpdateConnectorResponse.cls
+UpdateQueryProfileResponse.cls
+ViewDocumentResponse.cls
 ```
