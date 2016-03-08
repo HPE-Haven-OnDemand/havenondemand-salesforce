@@ -2,7 +2,7 @@
 
 ----
 ## Overview
-This library can be used to consume [HPE Haven OnDemand - https://dev.havenondemand.com/apis](https://dev.havenondemand.com/apis) in Salesforce. 
+This library can be used to consume [HPE Haven OnDemand - https://dev.havenondemand.com/apis](https://dev.havenondemand.com/apis) in Salesforce.
 
 ----
 ## What is HAVEN ONDEMAND?
@@ -60,7 +60,7 @@ try
 {
       // create client
       HODClient client = new HODClient(apiKey, version);
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('index','test'));
       // get response
       Map<String,Object> response= client.postRequest(params, HODAPP.INDEX_STATUS, HODClientConstants.REQ_MODE.SYNC);
@@ -79,10 +79,10 @@ try
 {
       // create client
       HODClient client = new HODClient(apiKey, version);
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('text', 'Sports'));
       params.add(new Param('highlight', 'sentences'));
-    	   
+
       // get response
       Map<String,Object> response = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
 }
@@ -103,7 +103,7 @@ try
       List<Param> params = new List<Param>();
       params.add(new Param('text', 'testing'));
       params.add(new Param('additional_metadata', 'true'));
-             
+
       // get response
       Map<String,Object> response = client.getRequest(params, HODAPP.LANGUAGE_IDENTIFICATION, HODClientConstants.REQ_MODE.SYNC);
 }
@@ -121,10 +121,10 @@ try
 {
       // create client
       HODClient client = new HODClient(apiKey, version);
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('url', 'http://www.cnn.com'));
       params.add(new Param('entity_type', 'places_eng'));
-             
+
       // get response
       Map<String,Object> response = client.getRequest(params, HODAPP.ENTITY_EXTRACTION, HODClientConstants.REQ_MODE.SYNC);
 }
@@ -133,7 +133,7 @@ catch (HODClientException ex)
      String message = ex.getMessage();
      System.debug(message);
 }
-		
+
 
 ```
 
@@ -147,10 +147,10 @@ try
       List<Param> params = new List<Param>();
       params.add(new Param('url', 'https://www.havenondemand.com/sample-content/images/bowers.jpg'));
       params.add(new Param('mode', 'document_photo'));
-      
+
       // get response
       Map<String,Object> response = client.getRequest(params, HODAPP.OCR_DOCUMENT, HODClientConstants.REQ_MODE.ASYNC);
-      String jobId = (String)response.get(HODClientConstants.JOB_ID); 
+      String jobId = (String)response.get(HODClientConstants.JOB_ID);
 }
 catch (HODClientException ex)
 {
@@ -164,7 +164,7 @@ catch (HODClientException ex)
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) == HODClientConstants.JOB_RESPONSE_FINISHED);
-      
+
       // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
       OCRDocumentResponse resObj = (OCRDocumentResponse)HODResponseParser.parseCustomResponse(data, OCRDocumentResponse.class);
 }
@@ -179,7 +179,7 @@ catch (HODClientException ex)
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED);
-      
+
       if(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED) {
       	 data = client.getJobResult(jobID);
       	 // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
@@ -214,7 +214,7 @@ catch (HODClientException ex)
 try{
       // create client get job id
       HODClient client = new HODClient(apiKey, version);
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('flavor',new List<String>{'standard','explorer'}));
       params.add(new Param('type',new List<String>{'content','connector'}));
       // get response
@@ -247,7 +247,7 @@ catch (HODClientException ex)
 try{
       Map<String,Object> data = client.getJobStatus(jobID);
       System.assert(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED);
-      
+
       if(data.get(HODClientConstants.JOB_RESPONSE_STATUS) != HODClientConstants.JOB_RESPONSE_FINISHED) {
       	 data = client.getJobResult(jobID);
       	 // Calling HODResponseParser parseCustomResponse method to parsed the ASYNC response data
@@ -281,7 +281,7 @@ catch (HODClientException ex)
 try{
       HODClient client = new HODClient(apiKey, version);
       // list of Param has to be passed for request with file attachment
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('test.csv',Blob.valueOf(csvString),'application/CSV'));
       params.add(new Param('service_name','test'));
       // call API
@@ -303,7 +303,7 @@ catch (HODClientException ex)
 try{
       HODClient client = new HODClient(apiKey, version);
       // list of Param has to be passed for request with file attachment
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('test1.pdf',Blob.toPdf(pdfValue1),'application/pdf'));
       params.add(new Param('test2.pdf',Blob.toPdf(pdfValue2),'application/pdf'));
       // call API
@@ -329,7 +329,7 @@ HODClient client = new HODClient(apiKey, version);
 List<Param> params = new List<Param>();
 params.add(new Param('test.csv',Blob.valueOf(csvString),'application/CSV'));
 params.add(new Param('service_name','test'));
-      
+
 try
 {
      // call API
@@ -354,8 +354,8 @@ catch (HODClientException ex)
      * @param hodApp end point to be called
      * @param mode sync/async
      * @return Map<String,Object> response
-     * @throws HODClientException 
-     */ 
+     * @throws HODClientException
+     */
     public Map<String,Object> postRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)
 
 
@@ -364,16 +364,16 @@ catch (HODClientException ex)
 ``` Apex
 
     /**
-     * calls GET Request 
+     * calls GET Request
      *
      * @param params params to be passed
      * @param hodApp end point to be called
      * @param mode sync/async
      * @return Map<String,Object> response
      * @throws HODClientException
-     */ 
+     */
     public Map<String,Object> getRequest(List<Param> params, String hodApp, HODClientConstants.REQ_Mode mode)
-    
+
 
 ```
 
@@ -405,9 +405,9 @@ HODResponseParser class is used to parse the response date ruturned as Map<Strin
 
 ``` Apex
    /**
-    * Method for parsing the HOD API response to specific supported object type. The method will be 
+    * Method for parsing the HOD API response to specific supported object type. The method will be
     * called after successfull calling of the HOD API and returned response will be passed here for parsing
-    * with the target response class type (based on the called HOD API) as argument. 
+    * with the target response class type (based on the called HOD API) as argument.
     * @param response  String Successful response received on HOD API call
     * @param classType Target class type to whom HOD API response result to be parsed
     * @throws HODClientException
@@ -435,7 +435,7 @@ HODResponseParser class is used to parse the response date ruturned as Map<Strin
     */
     public with sharing class FindSimilarResponse {
     	public List<DocumentObj> documents;
-	
+
 	public class DocumentObj {
 		public string index;	// ( string , optional)	The database that the result returned from.
 		public List<string> links; // ( array[string] , optional)	The terms from the query that match in the results document.
@@ -451,10 +451,10 @@ try
 {
       // create client
       HODClient client = new HODClient(apiKey, version);
-      List<Param> params = new List<Param>(); 
+      List<Param> params = new List<Param>();
       params.add(new Param('text', 'Sports'));
       params.add(new Param('highlight', 'sentences'));
-    	   
+
       // get response
       Map<String,Object> response = client.getRequest(params, HODAPP.FIND_SIMILAR, HODClientConstants.REQ_MODE.SYNC);
       FindSimilarResponse resObj = (FindSimilarResponse)HODResponseParser.parseCustomResponse(response, FindSimilarResponse.class);
@@ -468,34 +468,34 @@ catch (HODClientException ex)
 
 ----
 
-## Demo code 1: 
+## Demo code 1:
 
 **Call the Entity Extraction API to extract people and places from cnn.com website with a synchronous GET request**
 
 ```
 public class EntityExtractionExample {
 	static String apiKey = 'your-apiKey';
-	
-	public static void getEntityExtraction() 
+
+	public static void getEntityExtraction()
 	{
 	        try
 		{
 	            // create client
 	            HODClient client = new HODClient(apiKey);
-	            List<Param> params = new List<Param>(); 
+	            List<Param> params = new List<Param>();
 	            params.add(new Param('url', 'http://www.cnn.com'));
 	            params.add(new Param('entity_type', 'places_eng'));
-		    	   
+
 	            // get response
 	            Map<String,Object> response = client.getRequest(params, HODAPP.ENTITY_EXTRACTION, HODClientConstants.REQ_MODE.SYNC);
 	            EntityExtractionResponse resObj = (EntityExtractionResponse)HODResponseParser.parseCustomResponse(response, EntityExtractionResponse.class);
-	            
+
 	            if (resObj != null) {
 	            	String values = '';
 		            for (EntityExtractionResponse.Entity ent : resObj.entities) {
 		                values += ent.type + '\n';
 		                values += ent.normalized_text + '\n';
-		                if (ent.type.equals('places_eng')) { 
+		                if (ent.type.equals('places_eng')) {
 		                    values += ent.additional_information.place_country_code + '\n';
 		                    values += ent.additional_information.place_elevation + '\n';
 		                    values += ent.additional_information.place_population + '\n';
@@ -521,14 +521,14 @@ public class EntityExtractionExample {
  */
 public class EntityExtractionResponse {
 	public List<Entity> entities;	// The details of extracted items.
-	
+
 	public class Match
 	{
 	    public integer offset;
 	    public String original_text;
 	    public integer original_length;
 	}
-	
+
 	public class AdditionalInformation
 	{
 	    public List<String> person_profession;
@@ -539,7 +539,7 @@ public class EntityExtractionResponse {
 	    public String person_date_of_death;
 	    public Long place_population;
 	    public String place_country_code;
-	    public Double place_elevation; 
+	    public Double place_elevation;
 	    public string place_continent;
 	    public string place_type;
 	    public string place_region1;
@@ -548,7 +548,7 @@ public class EntityExtractionResponse {
 	    public Double lon;
 	    public Double lat;   
 	}
-	
+
 	public class Entity
 	{
 	    public String normalized_text;
@@ -561,7 +561,7 @@ public class EntityExtractionResponse {
 	    public integer offset;
 	    public integer original_length;
 	    public String original_text;
-	    
+
 	}
 }
 ```
@@ -620,3 +620,5 @@ UpdateConnectorResponse.cls
 UpdateQueryProfileResponse.cls
 ViewDocumentResponse.cls
 ```
+## Contributing
+We encourage you to contribute to this repo! Please send pull requests with modified and updated code.
